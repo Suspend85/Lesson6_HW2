@@ -4,35 +4,46 @@ class Track():
     def __init__(self, name='', duration=0):
         # Имя песни
         self.name = name
-        # Длина песни
+        # Продолжительность песни
         self.duration = duration
 
-    def show(self):
-        # Получаем информацию по конкретной песне
-        return f' {self.name} : {self.duration} min'
+    # магический метот для переопределения вывода
+    def __str__(self):
+        return f'{self.name} : {self.duration} min'
+
+    # магический метод сравнения
+    def __lt__(self, other):
+        return self.duration < other.duration
 
 
 # Создаем класс Album
 class Album:
     # Инициализируем атрибуты класса
     def __init__(self, author, name):
-        # Имя альбома
-        self.name = name
         # Имя автора
         self.author = author
+        # Имя альбома
+        self.name = name
         # Хранилище треков
         self.tracks = []
 
+    # Добавляем треки в хранилище
     def add_track(self, track):
-        # Добавляем треки в хранилище
         self.tracks.append(track)
 
-    def get_tracks(self):
-        # Выводим список всех имен песен
-        return [track.show() for track in self.tracks]
+    # магический метот для переопределения вывода
+    def __str__(self):
+        res = f'Author: {self.author}\nAlbum: {self.name}\nTracks:'
+        for track in enumerate(self.tracks, 1):
+            res += f'\n\t{track[0]}. {track[1]}'
+        return res
 
-    def get_duration(self):
-        # Считаем продолжительность всех песен альбома
+    # Выводим список всех имен песен
+    def get_tracks(self):
+        return [track.__str__() for track in self.tracks]
+
+    # Считаем продолжительность всех песен альбома
+    def get_album_duration(self):
         res = 0
         for track in self.tracks:
             res += track.duration
@@ -60,9 +71,10 @@ album.add_track(Track('Pacific', 4))
 album.add_track(Track('Alliance', 3))
 albums.append(album)
 
-# Выводим информацию по альбомам и трекам
 for album in albums:
-    print(f'Исполнитель: "{album.author}"\nАльбом: "{album.name}"')
-    for track in enumerate(album.get_tracks(), 1):
-        print(f'{track[0]}.{track[1]}')
-    print(f'Длительность всех треков: {album.get_duration()} минут\n')
+    print(f'{album} ')
+    print(f'\tTotal length: {album.get_album_duration()} min \n')
+
+track1 = Track('Firestarter', 4)
+track2 = Track('Breath', 6)
+print(f'"{track1}" > "{track2}" ?\n{track1 > track2}')
